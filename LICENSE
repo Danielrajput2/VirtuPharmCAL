@@ -1,0 +1,15 @@
+Apache License, Version 2.0 (with Intellectual Property Reservation Clause)
+
+Copyright (c) 2026 VirtuPharm Open CAL Initiative
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+COMMERCIAL & PRODUCTION IP RESTRICTION:
+This public codebase represents the evaluation and benchmark prototype tier of 
+VirtuPharm. The proprietary neural simulation algorithms, high-poly 3D laboratory 
+spatial assets, and production multi-tenant enterprise orchestration engines remain 
+the reserved proprietary intellectual property of the core project maintainers.
