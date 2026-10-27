@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VirtuPharm - Precision Pharmacology Simulation Platform</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    *::-webkit-scrollbar { width: 5px; height: 5px; }
+    *::-webkit-scrollbar-track { background: #070b12; }
+    *::-webkit-scrollbar-thumb { background: #10b981; border-radius: 9999px; }
+  </style>
+</head>
+<body class="min-h-screen bg-[#070b12] text-slate-100 flex flex-col font-sans select-none">
+
+  <!-- Navigation Bar -->
+  <header class="border-b border-slate-800 bg-[#0f172a] px-6 py-3.5 flex items-center justify-between sticky top-0 z-40">
+    <div class="flex items-center gap-3">
+      <div class="w-9 h-9 rounded-2xl bg-gradient-to-br from-emerald-500/20 to-sky-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 font-bold text-sm shadow-inner">
+        VP
+      </div>
+      <div>
+        <div class="flex items-center gap-2">
+          <h1 class="text-sm font-bold tracking-wide text-white">VirtuPharm Core</h1>
+          <span class="text-[9px] font-mono px-2 py-0.5 rounded bg-emerald-950/80 border border-emerald-800 text-emerald-400">CAL BENCHMARK</span>
+        </div>
+        <p class="text-[10px] text-slate-400">Computer Assisted Learning & Bioassay Simulation</p>
+      </div>
+    </div>
+
+    <!-- Live Telemetry Badges -->
+    <div class="flex items-center gap-4 text-xs font-mono">
+      <div class="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-xl bg-slate-900 border border-slate-800 text-slate-300">
+        <span class="text-emerald-400">🐀 Animals Saved:</span>
+        <span id="badgeAnimalsSaved" class="font-bold text-white">1,240</span>
+      </div>
+      <div class="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-slate-900 border border-slate-800 text-slate-300">
+        <span class="text-sky-400">👨‍🔬 Active Researchers:</span>
+        <span id="badgeActiveScholars" class="font-bold text-white">142</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Grid -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+    <!-- Left Controls Panel -->
+    <div class="lg:col-span-4 space-y-4">
+      
+      <!-- Tissue Chamber Controls -->
+      <div class="bg-[#0f172a] border border-slate-800 rounded-3xl p-5 space-y-4 shadow-xl">
+        <div class="border-b border-slate-800 pb-3">
+          <h2 class="text-xs font-bold uppercase tracking-wider text-white flex items-center gap-2">
+            <span>🧪</span> Organ Bath Chamber Controls
+          </h2>
+          <p class="text-[11px] text-slate-400 mt-0.5">Select agonist and micro-doses to simulate isolated tissue</p>
+        </div>
+
+        <div>
+          <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Target Tissue Preparation</label>
+          <select id="inputTissue" class="w-full bg-[#070b12] border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
+            <option value="guinea_pig_ileum">Isolated Guinea Pig Ileum</option>
+            <option value="frog_heart">Frog Heart Perfusion</option>
+            <option value="rectus_abdominis">Frog Rectus Abdominis Muscle</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Agonist Agent</label>
+          <select id="inputDrug" class="w-full bg-[#070b12] border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
+            <option value="Acetylcholine">Acetylcholine (Muscarinic Agonist)</option>
+            <option value="Histamine">Histamine (H1 Agonist)</option>
+            <option value="Adrenaline">Adrenaline (Adrenergic Agonist)</option>
+          </select>
+        </div>
+
+        <div>
+          <div class="flex justify-between text-[10px] font-bold uppercase text-slate-400 mb-1">
+            <span>Agonist Micro-Dose (mg)</span>
+            <span id="doseValDisplay" class="text-emerald-400 font-mono">2.0 mg</span>
+          </div>
+          <input type="range" id="inputDose" min="0.1" max="10.0" step="0.1" value="2.0" oninput="updateDoseLabel()"
+                 class="w-full accent-emerald-500 cursor-pointer" />
+        </div>
+
+        <div>
+          <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Competitive Antagonist (Atropine mg)</label>
+          <input type="number" id="inputAntagonist" min="0" max="5" step="0.5" value="0"
+                 class="w-full bg-[#070b12] border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-sky-500" />
+        </div>
+
+        <button onclick="runSimulation()" id="btnSimulate"
+                class="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold py-3 rounded-2xl text-xs transition cursor-pointer active:scale-95 shadow-lg flex items-center justify-center gap-2">
+          <span>⚡ Administer Dose & Record</span>
+        </button>
+      </div>
+
+      <!-- Quick Metrics Readout -->
+      <div class="bg-[#0f172a] border border-slate-800 rounded-3xl p-5 text-xs space-y-3">
+        <h3 class="font-bold text-white text-xs uppercase tracking-wider">Telemetry Telemetry Readout</h3>
+        <div class="grid grid-cols-2 gap-2">
+          <div class="bg-[#070b12] border border-slate-800/80 p-3 rounded-2xl">
+            <span class="text-[9px] font-mono text-slate-500 uppercase block">Response</span>
+            <span id="readoutResponse" class="text-lg font-black font-mono text-emerald-400">0.00%</span>
+          </div>
+          <div class="bg-[#070b12] border border-slate-800/80 p-3 rounded-2xl">
+            <span class="text-[9px] font-mono text-slate-500 uppercase block">Model Curve</span>
+            <span class="text-xs font-bold text-sky-400 mt-1 block">Hill-Langmuir</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Center/Right Visuals Panel -->
+    <div class="lg:col-span-8 space-y-6">
+
+      <!-- Real-Time Organ-Bath Kymograph Canvas -->
+      <div class="bg-[#0f172a] border border-slate-800 rounded-3xl p-5 shadow-xl space-y-3">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+          <div>
+            <h3 class="text-xs font-bold uppercase tracking-wider text-white">Live Kymograph Recording Drum</h3>
+            <p class="text-[10px] text-slate-400">Real-time isotonic tissue displacement waveform</p>
+          </div>
+          <span class="text-[10px] font-mono text-emerald-400 bg-emerald-950/80 border border-emerald-800 px-2 py-0.5 rounded">60 FPS REALTIME</span>
+        </div>
+        <div class="bg-[#070b12] border border-slate-800 rounded-2xl p-2 relative h-48 sm:h-56">
+          <canvas id="kymoCanvas" class="w-full h-full"></canvas>
+        </div>
+      </div>
+
+      <!-- Cumulative Dose-Response Curve (DRC) -->
+      <div class="bg-[#0f172a] border border-slate-800 rounded-3xl p-5 shadow-xl space-y-3">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+          <div>
+            <h3 class="text-xs font-bold uppercase tracking-wider text-white">Sigmoidal Dose-Response Curve (DRC)</h3>
+            <p class="text-[10px] text-slate-400">Semi-logarithmic plot showcasing pharmacological efficacy and affinity shift</p>
+          </div>
+          <button onclick="clearDRCData()" class="text-[10px] text-slate-400 hover:text-rose-400 underline cursor-pointer">Reset Curve</button>
+        </div>
+        <div class="bg-[#070b12] border border-slate-800 rounded-2xl p-4 h-60">
+          <canvas id="drcChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Live Admin Desk Simulator -->
+      <div class="bg-[#0f172a] border border-slate-800 rounded-3xl p-5 shadow-xl space-y-3">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-white flex items-center gap-2">
+            <span>🛡️</span> Admin Verification Desk Ledger (Zero-Cost Queue)
+          </h3>
+          <span id="pendingQueueBadge" class="text-[10px] font-mono text-amber-400 bg-amber-950/80 border border-amber-800 px-2 py-0.5 rounded">2 Pending</span>
+        </div>
+        <div id="adminTableBox" class="overflow-x-auto text-xs">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <script src="/script.js"></script>
+</body>
+</html>
