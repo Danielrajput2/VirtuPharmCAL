@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://capsule-render.vercel.app/api?type=waving&color=0:0f172a,50:10b981,100:38bdf8&height=200&section=header&text=VIRTUPHARM%20CORE&fontSize=52&fontColor=ffffff&fontAlignY=38&desc=Precision%20In-Silico%20Pharmacology%20%26%20Deterministic%20Bioassay%20Simulation%20Engine&descSize=16&descAlignY=60" alt="VirtuPharm Core Banner" width="100%"/>
+<img src="./assets/banner.svg" alt="VirtuPharm Core Animated Banner" width="100%"/>
 
 <br/>
 
@@ -171,7 +171,7 @@ $$EC_{50}' = EC_{50} \cdot \left(1 + \frac{[B]}{K_B}\right)$$
 **1. Clone the repository**
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/VirtuPharm-Core.git
+git clone https://github.com/Danielrajput2/VirtuPharmCAL
 cd VirtuPharm-Core
 ```
 
